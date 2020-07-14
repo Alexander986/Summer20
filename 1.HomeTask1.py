@@ -102,7 +102,7 @@ def creation_of_samples_of_frames():
 
     # first pick up some frames with different luminency
     # bright: 50 109 164 179 225 266        dark: 362 444
-    N = 504 # number of the frame which we save
+    N = 0 # number of the frame which we save
 
     while (ret):
 
@@ -903,6 +903,130 @@ def trackbars_and_ranges_green():
 
     cv2.waitKey(0)
 
+def trackbars_and_ranges_yellow():
+    '''We pick up manually the ranges for masks. We use trackbars
+    '''
+
+    list_of_frames = Param.list_of_frames
+    file = list_of_frames[Param.number]
+    frm = cv2.imread(file)
+
+    # # Now preprocessing: median blur and equalization
+    # frm_bl = cv2.medianBlur(frm, 5)
+    # frm_bleq = equalize_in_s(frm_bl)
+
+    frm_proc = preprocessing(frm, Param.preproc)
+
+    # Transform into hsv
+    frm_hsv = cv2.cvtColor(frm_proc, cv2.COLOR_BGR2HSV)
+
+    # # display what we have now
+    # cv2.imshow('frm', frm)
+    # cv2.imshow('frm bleq', frm_bleq)
+    # cv2.imshow('frm hsv', frm_hsv)
+    # split_into_3_ch(frm_hsv, 1)
+    # cv2.waitKey(0)
+
+    # creation trackbars
+    def nothing(x):
+        pass
+    cv2.namedWindow('Trackbars')
+    cv2.createTrackbar('LH', 'Trackbars', Param.yellow_lower_HSV[0], 179, nothing)
+    cv2.createTrackbar('UH', 'Trackbars', Param.yellow_upper_HSV[0], 179, nothing)
+    cv2.createTrackbar('LS', 'Trackbars', Param.yellow_lower_HSV[1], 255, nothing)
+    cv2.createTrackbar('US', 'Trackbars', Param.yellow_upper_HSV[1], 255, nothing)
+    cv2.createTrackbar('LV', 'Trackbars', Param.yellow_lower_HSV[2], 255, nothing)
+    cv2.createTrackbar('UV', 'Trackbars', Param.yellow_upper_HSV[2], 255, nothing)
+
+    # tool for choosing ranges
+    key = ord(' ')
+
+    while(True):
+        # get trackbars positions
+        lh = cv2.getTrackbarPos('LH', 'Trackbars')
+        uh = cv2.getTrackbarPos('UH', 'Trackbars')
+        ls = cv2.getTrackbarPos('LS', 'Trackbars')
+        us = cv2.getTrackbarPos('US', 'Trackbars')
+        lv = cv2.getTrackbarPos('LV', 'Trackbars')
+        uv = cv2.getTrackbarPos('UV', 'Trackbars')
+
+        # create a mask
+        lower = np.array([lh, ls, lv], dtype=np.uint8)
+        upper = np.array([uh, us, uv], dtype=np.uint8)
+        mask = cv2.inRange(frm_hsv, lower, upper)
+
+        cv2.imshow('mask', mask)
+        cv2.imshow('frame', frm)
+        cv2.imshow("3 channels of HSV", split_into_3_ch(frm_hsv) )
+        cv2.imshow("3 channels of BGR", split_into_3_ch(frm_proc))
+        key = cv2.waitKey(30)
+        if key == ord('1') or key == 27:
+            break
+
+    cv2.waitKey(0)
+
+def trackbars_and_ranges_green2():
+    '''We pick up manually the ranges for masks. We use trackbars
+    '''
+
+    list_of_frames = Param.list_of_frames
+    file = list_of_frames[Param.number]
+    frm = cv2.imread(file)
+
+    # # Now preprocessing: median blur and equalization
+    # frm_bl = cv2.medianBlur(frm, 5)
+    # frm_bleq = equalize_in_s(frm_bl)
+
+    frm_proc = preprocessing(frm, Param.preproc)
+
+    # Transform into hsv
+    frm_hsv = cv2.cvtColor(frm_proc, cv2.COLOR_BGR2HSV)
+
+    # # display what we have now
+    # cv2.imshow('frm', frm)
+    # cv2.imshow('frm bleq', frm_bleq)
+    # cv2.imshow('frm hsv', frm_hsv)
+    # split_into_3_ch(frm_hsv, 1)
+    # cv2.waitKey(0)
+
+    # creation trackbars
+    def nothing(x):
+        pass
+    cv2.namedWindow('Trackbars')
+    cv2.createTrackbar('LH', 'Trackbars', Param.green2_lower_HSV[0], 179, nothing)
+    cv2.createTrackbar('UH', 'Trackbars', Param.green2_upper_HSV[0], 179, nothing)
+    cv2.createTrackbar('LS', 'Trackbars', Param.green2_lower_HSV[1], 255, nothing)
+    cv2.createTrackbar('US', 'Trackbars', Param.green2_upper_HSV[1], 255, nothing)
+    cv2.createTrackbar('LV', 'Trackbars', Param.green2_lower_HSV[2], 255, nothing)
+    cv2.createTrackbar('UV', 'Trackbars', Param.green2_upper_HSV[2], 255, nothing)
+
+    # tool for choosing ranges
+    key = ord(' ')
+
+    while(True):
+        # get trackbars positions
+        lh = cv2.getTrackbarPos('LH', 'Trackbars')
+        uh = cv2.getTrackbarPos('UH', 'Trackbars')
+        ls = cv2.getTrackbarPos('LS', 'Trackbars')
+        us = cv2.getTrackbarPos('US', 'Trackbars')
+        lv = cv2.getTrackbarPos('LV', 'Trackbars')
+        uv = cv2.getTrackbarPos('UV', 'Trackbars')
+
+        # create a mask
+        lower = np.array([lh, ls, lv], dtype=np.uint8)
+        upper = np.array([uh, us, uv], dtype=np.uint8)
+        mask = cv2.inRange(frm_hsv, lower, upper)
+
+        cv2.imshow('mask', mask)
+        cv2.imshow('frame', frm)
+        cv2.imshow("3 channels of HSV", split_into_3_ch(frm_hsv) )
+        cv2.imshow("3 channels of BGR", split_into_3_ch(frm_proc))
+        key = cv2.waitKey(30)
+        if key == ord('1') or key == 27:
+            break
+
+    cv2.waitKey(0)
+
 def video_green_mask(write_to_file = 0):
     '''
     Function plays a video with a green mask
@@ -1040,17 +1164,30 @@ def video_green_and_red_masks(write_to_file = 0, write_mask = 0):
         # mask_green_filter = cv2.filter2D(mask_green, (np.ones((5,5), np.float32) * 255//25) )
         mask_green_median = cv2.medianBlur(mask_green, 15)
 
-        # # applying the mask to original BGR
-        # result_green = cv2.bitwise_and(frm_fringed, frm_fringed, mask = mask_green_median)
-
         # Combining the read and green masks
         mask_green_red = cv2.bitwise_or(mask_red_median, mask_green_median)
+
+        # Treating remaining parts. Yellow mask
+        # preprocessing the same as for green mask
+        lower_yellow = Param.yellow_lower_HSV
+        upper_yellow = Param.yellow_upper_HSV
+        mask_yellow = cv2.inRange(frm_hsv_green, lower_yellow, upper_yellow)
+        mask = cv2.bitwise_or(mask_green_red, mask_yellow)
+
+        # Treating remaining parts. Green2 mask
+        # preprocessing the same as for green mask
+        lower_green2 = Param.green2_lower_HSV
+        upper_green2 = Param.green2_upper_HSV
+        mask_green2 = cv2.inRange(frm_hsv_green, lower_green2, upper_green2)
+        mask = cv2.bitwise_or(mask_green2, mask)
+        mask = cv2.medianBlur(mask, 7)
+
         # apply the mask to the original BGR
-        result = cv2.bitwise_and(frm_fringed, frm_fringed, mask=mask_green_red)
+        result = cv2.bitwise_and(frm_fringed, frm_fringed, mask=mask)
 
         cv2.putText(frm_fringed, "Count: "+ str(frm_count), (10,100), 0, 2, [255,255,255],5)
         cv2.imshow("Video", frm_fringed)
-        cv2.imshow("Median", mask_green_red)
+        cv2.imshow("Median", mask)
         cv2.imshow("Result", result)
 
 
@@ -1059,14 +1196,14 @@ def video_green_and_red_masks(write_to_file = 0, write_mask = 0):
             if (write_mask!=1):
                 writer.write(result)
             else:
-                writer.write(mask_green_red)
+                writer.write(mask)
 
         if key == ord(' '):
             wait_period = 0
         elif ( key == 27 or key == ord(' ') ):
             break
         else:
-            wait_period = 1 # 30
+            wait_period = 30 # 1
         key = cv2.waitKey(wait_period)
         ret, frm = cap.read()
         frm_count+=1
@@ -1080,9 +1217,9 @@ def video_green_and_red_masks(write_to_file = 0, write_mask = 0):
 # Below are Class and functions that are called from other functions
 
 class Param:
-    list_of_frames = ["frame3.jpg", "frame50.jpg", "frame109.jpg", "frame164.jpg", "frame178.jpg", \
+    list_of_frames = ["frame0.jpg", "frame3.jpg", "frame5.jpg", "frame50.jpg", "frame109.jpg", "frame164.jpg", "frame178.jpg", \
                       "frame179.jpg", "frame180.jpg", "frame225.jpg",
-                      "frame266.jpg", "frame362.jpg", "frame444.jpg", "frame504.jpg"]
+                      "frame266.jpg", "frame362.jpg", "frame444.jpg", "frame495.jpg", "frame504.jpg"]
     red_lower_HSV = np.array([157, 51, 149], np.uint8)
     red_upper_HSV = np.array([179, 255, 255], np.uint8)
 
@@ -1093,11 +1230,17 @@ class Param:
     # green mask, works for preprocessing: 1, frame 5
     # green_lower_HSV = np.array([0, 185, 110], np.uint8)
     # green_upper_HSV = np.array([80, 255, 194], np.uint8)
-    green_lower_HSV = np.array([20, 141, 111], np.uint8)
-    green_upper_HSV = np.array([77, 255, 255], np.uint8)
+    green_lower_HSV = np.array([22, 121, 116], np.uint8)
+    green_upper_HSV = np.array([76, 255, 255], np.uint8)
+
+    yellow_lower_HSV = np.array([21, 0, 183], np.uint8)
+    yellow_upper_HSV = np.array([56, 255, 255], np.uint8)
+
+    green2_lower_HSV = np.array([20, 160, 180], np.uint8)
+    green2_upper_HSV = np.array([74, 255, 255], np.uint8)
 
     # the number of frame
-    number = -0
+    number = 1
     preproc = 1 # the way preprocessing goes
 
     # green mask, works for preprocessing: 1, frame 6
@@ -1220,9 +1363,13 @@ if __name__ == '__main__':
 
     # trackbars_and_ranges_green()
 
+    # trackbars_and_ranges_yellow()
+
+    # trackbars_and_ranges_green2()
+
     # video_green_mask() # options: 0  for not creating a video file, 1 for creating a video file
 
-    video_green_and_red_masks(1, 0) # first option: 1 for creating a video file, 0 for not creating file\
+    video_green_and_red_masks(1, 1) # first option: 1 for creating a video file, 0 for not creating file\
                                     # second option: 1 for writing mask (white and black), 0 for writing
                                     # colored figures
 
